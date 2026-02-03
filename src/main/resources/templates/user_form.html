@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Form</title>
+</head>
+<body>
+    <!-- Fixed: wrap entire ternary in ${...} -->
+    <h1 th:text="${user.id != null} ? 'Edit User' : 'Create User'">Form</h1>
+
+    <!-- Fixed th:action -->
+    <form th:action="${user.id != null} ? @{'/users/update/' + ${user.id}} : @{/users/create}" 
+          th:object="${user}" method="post">
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" required /><br/><br/>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required /><br/><br/>
+        <button type="submit" th:text="${user.id != null} ? 'Update User' : 'Add User'">Submit</button>
+    </form>
+    <br/>
+    <a href="/users">Back to List</a>
+</body>
+</html>
