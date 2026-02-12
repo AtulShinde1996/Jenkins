@@ -1,24 +1,57 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Users</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
+<header class="header">
+    <div class="logo-area">
+        <img th:src="@{/images/logo.png}" alt="logo" class="logo">
+        <h2>User Management System</h2>
+    </div>
+</header>
+
+<div class="container">
+
+```
+<div class="top-bar">
     <h1>User List</h1>
-    <a href="/users/create">Add User</a>
-    <table border="1">
-        <tr>
-            <th>ID</th><th>Name</th><th>Email</th><th>Actions</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}">1</td>
-            <td th:text="${user.name}">Name</td>
-            <td th:text="${user.email}">Email</td>
-            <td>
-                <a th:href="@{/users/edit/{id}(id=${user.id})}">Edit</a> |
-                <a th:href="@{/users/delete/{id}(id=${user.id})}">Delete</a>
-            </td>
-        </tr>
-    </table>
+    <a href="/users/create" class="btn-add">+ Add User</a>
+</div>
+
+<table class="user-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">Name</td>
+        <td th:text="${user.email}">Email</td>
+        <td>
+            <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn-edit">Edit</a>
+            <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn-delete">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
+```
+
+</div>
+
+<footer class="footer">
+    <p>© 2026 User Management System | DevOps Demo</p>
+</footer>
+
 </body>
 </html>

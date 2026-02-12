@@ -1,39 +1,80 @@
 pipeline {
-    agent any
+agent any
 
-    tools {
-        maven 'Maven3'
-    }
+tools {
+    maven 'Maven3'
+}
 
-    stages {
+stages {
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/AtulShinde1996/Jenkins.git',
-                credentialsId: 'github-creds'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                bat 'mvn clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                bat 'mvn test'
-            }
+    stage('Checkout') {
+        steps {
+            checkout scm
         }
     }
 
-    post {
-        success {
-            echo 'Build Successful 🎉'
-        }
-        failure {
-            echo 'Build Failed ❌'
+    
+    stage('Build') {
+        steps {
+            bat 'mvn -B -DskipTests clean package'
         }
     }
+
+    
+    stage('Quality Checks') {
+        parallel {
+
+            stage('Unit Tests') {
+                steps {
+                    bat 'mvn test'
+                }
+            }
+
+            stage('Verify') {
+                steps {
+                    bat 'mvn -q verify'
+                }
+            }
+        }
+    }
+
+    stage('Package') {
+        steps {
+            bat 'mvn package'
+        }
+    }
+
+    stage('Docker Build') {
+        steps {
+            bat 'docker build -t userservice:latest .'
+        }
+    }
+
+    stage('Stop Old Container') {
+        steps {
+            bat 'docker stop userservicecontainer || exit 0'
+            bat 'docker rm userservicecontainer || exit 0'
+        }
+    }
+
+    stage('Deploy') {
+        when {
+            branch 'main'
+        }
+        steps {
+            bat 'docker run -d -p 9090:9090 --name userservicecontainer userservice:latest'
+        }
+    }
+}
+
+post {
+    success {
+        echo 'Build Successful '
+    }
+    failure {
+        echo 'Build Failed '
+    }
+}
+
+
 }
