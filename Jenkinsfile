@@ -41,9 +41,9 @@ stages {
         }
     }
     stage('Deploy Container') {
-        when {
-            branch 'main'
-        }
+//        when {
+//            branch 'main'
+//        }
         steps {
             bat 'docker run -d -p 9090:9090 --name userservicecontainer userservice:latest'
         }
