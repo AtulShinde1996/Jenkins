@@ -2,17 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>User Form</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 
 <body>
 	<!-- Fixed: wrap entire ternary in ${...} -->
 	<h1 th:text="${user.id != null} ? 'Edit User' : 'Create User'">Form</h1>
 
 	<!-- Fixed th:action -->
-	<form th:action="${user.id != null} ? @{'/users/update/' + ${user.id}} : @{/users/create}" th:object="${user}"
+	<form th:action="${user.id != null} ? @{/users/update/{id}(id=${user.id})} : @{/users/create}" th:object="${user}"
 		method="post">
+
 		<label>Name:</label>
 		<input type="text" th:field="*{name}" required /><br /><br />
 		<label>Email:</label>
