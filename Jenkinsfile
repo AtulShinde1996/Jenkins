@@ -1,46 +1,20 @@
 pipeline {
 agent any
-
 tools {
-    maven 'Maven3'
+maven 'Maven3'
 }
 
 stages {
 
     stage('Checkout') {
         steps {
-            checkout scm
+            git branch: 'main', url: 'https://github.com/AtulShinde1996/Jenkins.git'
         }
     }
 
-    
-    stage('Build') {
+    stage('Build - Maven') {
         steps {
-            bat 'mvn -B -DskipTests clean package'
-        }
-    }
-
-    
-    stage('Quality Checks') {
-        parallel {
-
-            stage('Unit Tests') {
-                steps {
-                    bat 'mvn test'
-                }
-            }
-
-            stage('Verify') {
-                steps {
-                    bat 'mvn -q verify'
-                }
-            }
-        }
-    }
-
-    stage('Package') {
-        steps {
-            bat 'mvn package'
+            bat 'mvn clean package'
         }
     }
 
@@ -57,7 +31,16 @@ stages {
         }
     }
 
-    stage('Deploy') {
+//    stage('manual aproval to deployed'){
+//        steps{
+//            script {
+//                timeout(time: 2, unit: 'MINUTES'){
+//                 input message: "Deploy to UAT environment?", ok: "Approve"
+//                }
+//             }
+//        }
+//    }
+    stage('Deploy Container') {
         when {
             branch 'main'
         }
@@ -69,12 +52,12 @@ stages {
 
 post {
     success {
-        echo 'Build Successful '
+        echo 'Application deployed successfully!'
     }
     failure {
-        echo 'Build Failed '
+        echo 'Build failed! Check console output.'
     }
 }
-
+ 
 
 }
