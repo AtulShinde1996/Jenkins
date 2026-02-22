@@ -8,7 +8,8 @@ stages {
 
     stage('Checkout') {
         steps {
-            git branch: 'main', url: 'https://github.com/AtulShinde1996/Jenkins.git'
+//            git branch: 'main', url: 'https://github.com/AtulShinde1996/Jenkins.git'
+		      checkout scm;
         }
     }
 
